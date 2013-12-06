@@ -1,14 +1,13 @@
-annagreta is an authorization library designed to integrate both easily and non-intrusively with any kind of Clojure program.
+annagreta is a Clojure authorization library.
 
-## Key features
+## Features
 
  * integrates well with Clojure programs
  * decomposed and non-intrusive - imposes minimal design on the client
  * token based - usernames and passwords need not be passed around
- * stateless - by default, tokens are sent with each request so that multiple accounts can be accessed from the same browser
- * prepared to be either its own service or just a library used directly by any program
+ * prepared to be used either as a REST service or a library
  * a client helper namespace (annagreta.treq) that minimizes the coding involved in using the REST API
- * can keep member/user info in the authentication database, if desired
+ * has helpers for keeping member/user info in the authentication database, if desired
  * all features that come as a side effect of using Datomic, such as great possibilities to analyze the history of the authentication database
  * as use cases mature and the library is used, HTML widgets such as member lists and sign in / sign out forms are being made available via the REST API
 
@@ -19,7 +18,27 @@ annagreta is an authorization library designed to integrate both easily and non-
 
 ## Getting Started
 
-The typical use case of granting a member (identified by some id) requesting something from a server might look like this on the server:
+The core concept in annagreta is the notion of an 'auth-key' that can look like this:
+```clj
+{:token "abcd" :locks {:member "nina@stocktown.se" :watch-user ["mike@gothcity.com" "greta@carnaby.uk"] :pages ["^http://www.fish.com/.*"] :widgets ["stocks" "weather"]}}
+```
+This key is idenfitied by a token and can unlock a bunch of locks. The keys in 'locks' are totally arbitrary and depends on the design of the system using annagreta. A value like this can be loaded from annagreta and passed around to unlock functionality in a program. By being a value, it can also easily be passed around between different systems.
+
+The unlocking of a feature is as simple as this:
+```clj
+(if (core/unlocks? auth-key :widget "weather")
+  {:body (current-weather-html)}
+  {:body (santa-claus)})
+```
+
+There are also helper functions to make dealing with the typical use case of keys unlocking private functionality for a member in a system:
+```clj
+(if (member/unlocks-member? auth-key {:person/primary-email "nina@stocktown.se"})
+  {:body (current-weather-html)}
+  {:body (santa-claus)})
+```
+
+This is how it might look like on a typical server granting a user a page view:
 ```clj
 (:require [net.cgrand.moustache :as moustache])
 (:require [torpo.uri :as uri])
@@ -42,26 +61,33 @@ The typical use case of granting a member (identified by some id) requesting som
 
 (def routes (-> (moustache/app ["hello-world-resource"] (moustache/app :get hello-world-route-handler))
 ```
-
 The returned result from annapick looks something like this:
 ```clj
 {:member   {:person/primary-email "nina@stocktown.se"}
  :auth-key {:token "abcd" :locks {:member "nina@stocktown.se"}}}
 ```
 
-Note, however, that the core functionality of this library does not deal with members at all. An auth-key could be used to unlock any functionality in the server. This is another example:
+However, it is just as easy to grant functionality at any program level.
+
 ```clj
-{:token "1234"
- :locks {:page "http://some.url.se"
-         :widget ["stocks" "weather"]}}
+(ns webstuff
+  (:require [annagreta.core :as anna])
+  (:require [annagreta.person :as person])
+  (:require [annagreta.member :as member]))
+
+(defn some-list [{:keys [member auth-key]}]
+  (let [member-map (person/make-id-person member)
+        member-id (person/get-id member-map)]
+    [:div
+      (if (member/unlocks-member? auth-key member-map)
+        [:ul.nav
+         [:li [:a {:href (str "http://www.secrets.se/" (:person/nickname member))} "Your personal link"]]
+        [:ul.nav
+         [:li [:a {:href "http://www.public.se"} "Non-personal link"]]]))
+      (when (anna/unlocks? auth-key :widget "weather")
+        [:div (weather-widget)])]))
 ```
 
-The above could be used like:
-```clj
-(if (unlocks? auth-key :widget "weather")
-  {:body (current-weather-html)}
-  {:body (santa-claus)})
-```
 
 ## Project Maturity
 
