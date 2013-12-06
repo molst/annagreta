@@ -33,7 +33,7 @@ The typical use case of granting a member (identified by some id) requesting som
                       pick-map))))
 
 (defn hello-world-route-handler [req]
-  (let [[member auth-key] (annapick req)] ;request params "member" and "auth-key" must be set to id's identifying a member and auth-key respectively
+  (let [{:keys [member auth-key]} (annapick req)] ;request params "member" and "auth-key" must be set to id's identifying a member and auth-key respectively
     (if (unlocks-member? auth-key member)
       {:body "hello world GRANTED!!!"}
       {:body "go home"}))

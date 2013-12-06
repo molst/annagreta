@@ -19,4 +19,4 @@ logfile
 .lein-deps-sum
 .nrepl-port
 .DS_Store
-pom.xml
+pom.*
