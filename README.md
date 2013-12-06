@@ -2,7 +2,7 @@ annagreta is an authorization library designed to integrate both easily and non-
 
 ## Key features
 
- * integrates nicely with Clojure programs
+ * integrates well with Clojure programs
  * decomposed and non-intrusive - imposes minimal design on the client
  * token based - usernames and passwords need not be passed around
  * stateless - by default, tokens are sent with each request so that multiple accounts can be accessed from the same browser
@@ -19,7 +19,7 @@ annagreta is an authorization library designed to integrate both easily and non-
 
 ## Getting Started
 
-The typical use case of granting a member identified by some id is requesting something from a server might look something like this in the server:
+The typical use case of granting a member (identified by some id) requesting something from a server might look like this on the server:
 ```clj
 (:require [torpo.uri :as uri])
 (:require [treq.core :as treq])
