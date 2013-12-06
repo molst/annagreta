@@ -21,9 +21,11 @@ annagreta is an authorization library designed to integrate both easily and non-
 
 The typical use case of granting a member (identified by some id) requesting something from a server might look like this on the server:
 ```clj
+(:require [net.cgrand.moustache :as moustache])
 (:require [torpo.uri :as uri])
 (:require [treq.core :as treq])
 (:require [annagreta.treq :as annatreq])
+(:require [annagreta.member :as m])
 
 (defn annapick "Pick stuff according to the supplied (optional) map from annagreta. Always picks :member :auth-key identified by the corresponding request parameters from annagreta."
   [req & [pick-map]]
@@ -34,7 +36,7 @@ The typical use case of granting a member (identified by some id) requesting som
 
 (defn hello-world-route-handler [req]
   (let [{:keys [member auth-key]} (annapick req)] ;request params "member" and "auth-key" must be set to id's identifying a member and auth-key respectively
-    (if (unlocks-member? auth-key member)
+    (if (m/unlocks-member? auth-key member)
       {:body "hello world GRANTED!!!"}
       {:body "go home"}))
 
