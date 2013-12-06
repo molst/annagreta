@@ -67,7 +67,7 @@ NOT secure or well tested. Might contain severe bugs. Have never been used on a 
 
 ## Artifacts
 
-[on Clojars](https://clojars.org/vindaloo). If you are using Maven, add the following repository
+[on Clojars](https://clojars.org/annagreta). If you are using Maven, add the following repository
 definition to your `pom.xml`:
 
 ```xml
