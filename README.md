@@ -20,7 +20,9 @@ annagreta is a Clojure authorization library.
 
 The core concept in annagreta is the notion of an 'auth-key' that can look like this:
 ```clj
-{:token "abcd" :locks {:member "nina@stocktown.se" :watch-user ["mike@gothcity.com" "greta@carnaby.uk"] :pages ["^http://www.fish.com/.*"] :widgets ["stocks" "weather"]}}
+{:token "abcd" :locks {:member "nina@stocktown.se"
+	               :watch-user ["mike@gothcity.com" "greta@carnaby.uk"]
+		       :pages ["^http://www.fish.com/.*"] :widgets ["stocks" "weather"]}}
 ```
 This key is idenfitied by a token and can unlock a bunch of locks. The keys in 'locks' are totally arbitrary and depends on the design of the system using annagreta. A value like this can be loaded from annagreta and passed around to unlock functionality in a program. By being a value, it can also easily be passed around between different systems.
 
