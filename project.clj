@@ -1,4 +1,4 @@
-(defproject annagreta "0.1-SNAPSHOT"
+(defproject annagreta "0.2-SNAPSHOT"
   :description "annagreta is an authorization library designed to integrate with Clojure applications."
   :license {:name "Eclipse Public License - v 1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"
@@ -12,10 +12,10 @@
                  [ring/ring-jetty-adapter "1.2.1"]
                  [ring-cors "0.1.0"]
                  [net.cgrand/moustache "1.1.0"]
-                 [hazel "0.1-SNAPSHOT"]
-                 [torpo "0.1-SNAPSHOT"]
-                 [rocky "0.1-SNAPSHOT"]
-                 [shaky "0.1-SNAPSHOT"]
-                 [treq "0.1-SNAPSHOT"]
-                 [pisto "0.1-SNAPSHOT"]]
+                 [hazel "0.2-SNAPSHOT"]
+                 [torpo "0.2-SNAPSHOT"]
+                 [rocky "0.2-SNAPSHOT"]
+                 [shaky "0.2-SNAPSHOT"]
+                 [treq "0.2-SNAPSHOT"]
+                 [pisto "0.2-SNAPSHOT"]]
   :profiles {:dev {:dependencies [[midje "1.5.1"]]}})
