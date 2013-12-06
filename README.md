@@ -64,13 +64,8 @@ A more complete example of granting a user a page view:
 
 (def routes (-> (moustache/app ["hello-world-resource"] (moustache/app :get hello-world-route-handler))
 ```
-The returned result from annapick looks something like this:
-```clj
-{:member   {:person/primary-email "nina@stocktown.se"}
- :auth-key {:token "abcd" :locks {:member "nina@stocktown.se"}}}
-```
 
-However, it is just as easy to grant functionality at any program level.
+It is just as easy to grant functionality at a lower program level.
 
 ```clj
 (ns webstuff
