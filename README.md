@@ -55,8 +55,9 @@ A more complete example of granting a user a page view:
                (merge (select-keys (:params auth-uri) [:member :auth-key])
                       pick-map))))
 
+;This handler is taking care of requests like "http://localhost/hello-world-resource?member="anna@stocktown.se"&auth-key="abcd"
 (defn hello-world-route-handler [req]
-  (let [{:keys [member auth-key]} (annapick req)] ;request params "member" and "auth-key" must be set to id's identifying a member and auth-key respectively
+  (let [{:keys [member auth-key]} (annapick req)] ;picks member and auth-key from annagreta
     (if (member/unlocks-member? auth-key member)
       {:body "hello world GRANTED!!!"}
       {:body "go home"}))
