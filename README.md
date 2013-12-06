@@ -42,11 +42,12 @@ There are also helper functions to make dealing with the typical use case of key
 
 A more complete example of granting a user a page view:
 ```clj
-(:require [net.cgrand.moustache :as moustache])
-(:require [torpo.uri :as uri])
-(:require [treq.core :as treq])
-(:require [annagreta.treq :as annatreq])
-(:require [annagreta.member :as member])
+(ns wildrank.site
+  (:require [net.cgrand.moustache :as moustache])
+  (:require [torpo.uri :as uri])
+  (:require [treq.core :as treq])
+  (:require [annagreta.treq :as annatreq])
+  (:require [annagreta.member :as member]))
 
 (defn annapick "Pick stuff according to the supplied (optional) map from annagreta. Always picks :member :auth-key identified by the corresponding request parameters from annagreta."
   [req & [pick-map]]
@@ -65,7 +66,7 @@ A more complete example of granting a user a page view:
 (def routes (-> (moustache/app ["hello-world-resource"] (moustache/app :get hello-world-route-handler))
 ```
 
-It is just as easy to grant functionality at a lower program level.
+It is just as easy to grant functionality at a lower program level:
 
 ```clj
 (ns webstuff
