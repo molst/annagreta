@@ -28,7 +28,7 @@ This key is idenfitied by a token and can unlock a bunch of locks. The keys in '
 
 The unlocking of a feature is as simple as this:
 ```clj
-(if (core/unlocks? auth-key :widget "weather")
+(if (anna/unlocks? auth-key :widget "weather")
   {:body (current-weather-html)}
   {:body (santa-claus)})
 ```
@@ -40,13 +40,13 @@ There are also helper functions to make dealing with the typical use case of key
   {:body (santa-claus)})
 ```
 
-This is how it might look like on a typical server granting a user a page view:
+A more complete example of granting a user a page view:
 ```clj
 (:require [net.cgrand.moustache :as moustache])
 (:require [torpo.uri :as uri])
 (:require [treq.core :as treq])
 (:require [annagreta.treq :as annatreq])
-(:require [annagreta.member :as m])
+(:require [annagreta.member :as member])
 
 (defn annapick "Pick stuff according to the supplied (optional) map from annagreta. Always picks :member :auth-key identified by the corresponding request parameters from annagreta."
   [req & [pick-map]]
@@ -57,7 +57,7 @@ This is how it might look like on a typical server granting a user a page view:
 
 (defn hello-world-route-handler [req]
   (let [{:keys [member auth-key]} (annapick req)] ;request params "member" and "auth-key" must be set to id's identifying a member and auth-key respectively
-    (if (m/unlocks-member? auth-key member)
+    (if (member/unlocks-member? auth-key member)
       {:body "hello world GRANTED!!!"}
       {:body "go home"}))
 
@@ -77,7 +77,7 @@ However, it is just as easy to grant functionality at any program level.
   (:require [annagreta.person :as person])
   (:require [annagreta.member :as member]))
 
-(defn some-list [{:keys [member auth-key]}]
+(defn some-html-list [{:keys [member auth-key]}]
   (let [member-map (person/make-id-person member)
         member-id (person/get-id member-map)]
     [:div
