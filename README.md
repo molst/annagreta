@@ -13,7 +13,7 @@ annagreta is a Clojure authorization library.
 
 ## Annagreta does NOT
 
- * try conform to any authentication standards
+ * try conform to any authentication standards (in favor of simplicity)
  * (yet) address any channel security
 
 ## Getting Started
@@ -26,18 +26,24 @@ The core concept in annagreta is the notion of an 'auth-key' that can look like 
 ```
 This key is idenfitied by a token and can unlock a bunch of locks. The keys in 'locks' are totally arbitrary and depends on the design of the system using annagreta. A value like this can be loaded from annagreta and passed around to unlock functionality in a program. By being a value, it can also easily be passed around between different systems.
 
+The following sections is about explaining how to resolve a request like this:
+```
+http://localhost/hello-world-resource?member="anna@stocktown.se"&auth-key="abcd"
+```
+It could show the client a user specific page if there is a key in the annagreta database that is identified by token "abcd" and has a lock for key :member with a value of "anna@stocktown.se".
+
 The unlocking of a feature is as simple as this:
 ```clj
 (if (anna/unlocks? auth-key :widget "weather")
-  {:body (current-weather-html)}
-  {:body (santa-claus)})
+  (current-weather-html)
+  (santa-claus))
 ```
 
 There are also helper functions to make dealing with the typical use case of keys unlocking private functionality for a member in a system:
 ```clj
 (if (member/unlocks-member? auth-key {:person/primary-email "nina@stocktown.se"})
-  {:body (current-weather-html)}
-  {:body (santa-claus)})
+  (current-weather-html)
+  (santa-claus))
 ```
 
 A more complete example of granting a user a page view:
@@ -74,7 +80,7 @@ It is just as easy to grant functionality at a lower program level:
   (:require [annagreta.person :as person])
   (:require [annagreta.member :as member]))
 
-(defn some-html-list [{:keys [member auth-key]}]
+(defn some-html-div [{:keys [member auth-key]}]
   (let [member-map (person/make-id-person member)
         member-id (person/get-id member-map)]
     [:div
@@ -86,11 +92,12 @@ It is just as easy to grant functionality at a lower program level:
       (when (anna/unlocks? auth-key :widget "weather")
         [:div (weather-widget)])]))
 ```
+Notice that the function generates HTML data. Even if the HTML is hosted on Clojure in this case, rather than on something XMLish, the semantics are just the same and should be familiar to any web developer.
 
 
 ## Project Maturity
 
-NOT secure or well tested. Might contain severe bugs. Have never been used on a production web site yet. Use on your own risk! Developed primarily for my personal use. Anything can change without notice.
+NOT very well tested. Might contain severe bugs. Have never been used on a production web site. Developed primarily for my personal use. Anything can change without notice.
 
 ## Artifacts
 
