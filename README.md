@@ -30,7 +30,7 @@ The following sections is about explaining how to resolve a request like this:
 ```
 http://localhost/hello-world-resource?member="anna@stocktown.se"&auth-key="abcd"
 ```
-It could show the client a user specific page if there is a key in the annagreta database that is identified by token "abcd" and has a lock for key :member with a value of "anna@stocktown.se".
+It could show the client a user specific page if there is a key in the annagreta database that is identified by token "abcd" and has a lock for key :member with a value of "anna@stocktown.se", and another if no such key is found.
 
 The unlocking of a feature is as simple as this:
 ```clj
@@ -58,7 +58,7 @@ A more complete example of granting a user a page view:
 (defn annapick "Pick stuff according to the supplied (optional) map from annagreta. Always picks :member :auth-key identified by the corresponding request parameters from annagreta."
   [req & [pick-map]]
   (let [auth-uri (uri/merge annagreta-base-uri (annatreq/auth-req-to-uri req))]
-    (treq/pick http/block-read! auth-uri
+    (treq/pick http/block-read! auth-uri ;as the request parameters are a natural flat map, or the top of a tree, treq is a good fit for resolving the params
                (merge (select-keys (:params auth-uri) [:member :auth-key])
                       pick-map))))
 
